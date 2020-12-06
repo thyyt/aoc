@@ -1,4 +1,13 @@
-from typing import List, NoReturn
+from typing import List, NoReturn, Tuple
+from functools import reduce
+
+SLOPES = [
+    (1, 1),
+    (3, 1),
+    (5, 1),
+    (7, 1),
+    (1, 2),
+]
 
 
 class Trajectory:
@@ -9,6 +18,14 @@ class Trajectory:
         self.pos_x = 0
         self.pos_y = 0
         self.tree_hits = 0
+        self.past_tree_hits = []
+        self.slopes = []
+
+    def reset(self):
+        self.past_tree_hits.append(self.tree_hits)
+        self.tree_hits = 0
+        self.pos_x = 0
+        self.pos_y = 0
 
     def take_step(self, right_step: int, down_step: int) -> NoReturn:
         self.pos_x = (self.pos_x + right_step) % self.width
@@ -39,12 +56,34 @@ class Trajectory:
         while self.pos_y < self.height:
             self.take_step(right, down)
 
+    def add_slopes(self, slopes: List[Tuple[int, int]]):
+        self.slopes = self.slopes + slopes
+
+    def travel_slopes(self) -> NoReturn:
+        for slope in self.slopes:
+            print(slope)
+            right, down = slope
+            self.travel(right, down)
+            print(self.tree_hits)
+            self.reset()
+
+    def get_total_trees_multiplied(self) -> int:
+        print(self.past_tree_hits)
+        return reduce(lambda x, y: x*y, self.past_tree_hits)
+
 
 def main():
     trajectory = Trajectory(input_file="day_3/input.txt")
     trajectory.travel(3, 1)
     tree_hits = trajectory.get_tree_hits()
-    print("Tree hits: ", tree_hits)
+    print("Tree hits on initial route: ", tree_hits)
+    trajectory.reset()
+
+    multiple_trajectory = Trajectory(input_file="day_3/input.txt")
+    multiple_trajectory.add_slopes(SLOPES)
+    multiple_trajectory.travel_slopes()
+    total_tree_hits = multiple_trajectory.get_total_trees_multiplied()
+    print("Total tree hits on all routes: ", total_tree_hits)
 
 
 if __name__ == "__main__":
