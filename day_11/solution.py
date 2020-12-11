@@ -11,8 +11,6 @@ class Seating:
         self.width = len(lines[0])
         self.height = len(lines)
         self.floor = np.nonzero(self.seating_map == ".")
-        for i in self.floor:
-            if i[0] >= self.width or i[1] >= self.height:
         pair_list = []
         for y, x in zip(*self.floor):
             pair_list.append((x, y))
@@ -42,7 +40,9 @@ class Seating:
         new_seating = self.seating_map.copy()
         for x, y in self.potentially_changing:
             occupied_neighbours = self.count_visible_occupied_seats(x, y)
-            new_state = self.get_new_state_visible(new_seating[y, x], occupied_neighbours)
+            new_state = self.get_new_state_visible(
+                new_seating[y, x], occupied_neighbours
+            )
             if new_state != self.seating_map[y, x]:
                 new_seating[y, x] = new_state
                 changing_map.append((x, y))
