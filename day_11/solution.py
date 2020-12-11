@@ -164,7 +164,7 @@ def read_input(input_file) -> List[str]:
 def main():
     lines = read_input("day_11/input.txt")
     seating = Seating(lines)
-    # seating.iterate_until_convergence()
+    seating.iterate_until_convergence()
     occupied = seating.count_occupied()
     print("Occupied seats:", occupied)
 
