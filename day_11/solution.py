@@ -13,7 +13,6 @@ class Seating:
         self.floor = np.nonzero(self.seating_map == ".")
         for i in self.floor:
             if i[0] >= self.width or i[1] >= self.height:
-                print(i)
         pair_list = []
         for y, x in zip(*self.floor):
             pair_list.append((x, y))
@@ -73,14 +72,12 @@ class Seating:
         self.update_potentials(self.full_potentials)
         seating_changed = True
         while seating_changed:
-            print(self.iterations, len(self.potentially_changing))
             seating_changed = self.iterate_seating_visible()
             self.iterations += 1
 
     def iterate_until_convergence(self) -> NoReturn:
         seating_changed = True
         while seating_changed:
-            print(self.iterations, len(self.potentially_changing))
             seating_changed = self.iterate_seating()
             self.iterations += 1
 
