@@ -9,6 +9,7 @@ def find_target_value_pairs(df: pd.DataFrame, target: int) -> Tuple[int, int]:
                 return (df.loc[i, 0], df.loc[j, 0])
 
 
+
 def find_target_value_triplets(df: pd.DataFrame, target: int) -> Tuple[int, int]:
     for i in range(df.shape[0]):
         for j in range(df.shape[0] - i - 1):

@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple
 
 
-def read_input(input_file) -> List[str]:
+def read_input(input_file: str) -> List[str]:
     open_file = open(input_file, "rb+")
     lines = open_file.readlines()
     return [line.decode("utf-8").strip() for line in lines]
@@ -51,7 +51,7 @@ def count_bags_inside(
     bags_inside = 0
     containments, counts = bag_map[bag]
     for bag, count in zip(containments, counts):
-        bags_inside += (count * (1 + count_bags_inside(bag, bag_map)))
+        bags_inside += count * (1 + count_bags_inside(bag, bag_map))
     return bags_inside
 
 
@@ -65,14 +65,7 @@ def can_contain_bag(
         return False
     if target_bag in containments:
         return True
-    return bool(
-        max(
-            [
-                can_contain_bag(inner_bag, bag_map, target_bag)
-                for inner_bag in containments
-            ]
-        )
-    )
+    return bool(max([can_contain_bag(inner_bag, bag_map, target_bag) for inner_bag in containments]))
 
 
 def iterate_over_bags(bag_map: Dict[str, Tuple[List[str], List[int]]]) -> List[str]:
