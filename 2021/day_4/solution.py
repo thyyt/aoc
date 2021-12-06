@@ -48,6 +48,11 @@ class BingoBoard:
                 sum_of_unmarked += self.numbers_grid[row_index][col_index] * (
                     1 - int(self.hits[row_index][col_index])
                 )
+        for row in self.numbers_grid:
+            print(row)
+        for row in self.hits:
+            print(row)
+        print(sum_of_unmarked, last_drawn)
         return sum_of_unmarked * last_drawn
 
 
@@ -57,6 +62,7 @@ class BingoSubsystem:
     def __init__(self, lines: List[str]):
         self.width = 5
         self.height = 5
+        self.first_bingo = False
         self.numbers_to_draw = [int(number) for number in lines[0].split(",")]
         self.boards = self.build_boards(lines[2:])
 
@@ -67,12 +73,24 @@ class BingoSubsystem:
         ]
 
     def run(self):
+        boards_to_remove = []
         for drawn in self.numbers_to_draw:
+            for board in boards_to_remove:
+                self.boards.remove(board)
+            boards_to_remove = []
             for board in self.boards:
                 score = board.draw_number(drawn)
-                if score > 0:
-                    print(f"BINGO! The score is: {score}")
+                if score > 0 and not self.first_bingo:
+                    self.first_bingo = True
+                    print(f"BINGO! The score for the first board is: {score}")
+                    boards_to_remove.append(board)
+                elif score > 0 and len(self.boards) > 1:
+                    print("meaningless bingo!")
+                    boards_to_remove.append(board)
+                elif score > 0 and len(self.boards) == 1:
+                    print(f"BINGO! The score for the final board is: {score}")
                     return
+        return
 
 
 def main():
