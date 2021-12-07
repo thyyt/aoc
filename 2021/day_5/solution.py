@@ -51,15 +51,37 @@ class HydroVents:
     def count_ovelaps(self) -> int:
         return (self.grid > 1).sum()
 
+    def draw_diagonal_lines(self) -> None:
+        for ends in self.line_ends:
+            if ends.start.x != ends.end.x and ends.start.y != ends.end.y:
+                for y, x in zip(
+                    self.get_diagonal_range(ends.start.y, ends.end.y),
+                    self.get_diagonal_range(ends.start.x, ends.end.x),
+                ):
+                    self.grid[x, y] += 1
+
+    def get_diagonal_range(self, start: int, end: int) -> np.ndarray:
+        if start < end:
+            return np.arange(start, end + 1, 1)
+        return np.arange(start, end - 1, -1)
+
 
 def main():
     with open("input") as f:
         # with open("example") as f:
         lines = f.readlines()
-        hydro_vents = HydroVents(lines)
-        hydro_vents.draw_vertical_lines()
-        hydro_vents.draw_horizontal_lines()
-        print(f"horizontal and vertical line overlaps: {hydro_vents.count_ovelaps()}")
+    hydro_vents = HydroVents(lines)
+    hydro_vents.draw_vertical_lines()
+    hydro_vents.draw_horizontal_lines()
+    print(hydro_vents.grid.T)
+    print(f"horizontal and vertical line overlaps: {hydro_vents.count_ovelaps()}")
+    hydro_vents.draw_diagonal_lines()
+    print(hydro_vents.grid.T)
+    print(f"Total line overlaps: {hydro_vents.count_ovelaps()}")
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":
