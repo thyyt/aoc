@@ -36,6 +36,7 @@ def second_part(input: List[str]) -> int:
 
     return sum(sorted(elf_calories)[-3:])
 
+
 def main():
     input = read_input("input")
     print(first_part(input))
